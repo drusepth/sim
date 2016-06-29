@@ -14,7 +14,7 @@ module HungerSystem
     private
 
     def increase_hunger
-      hunger_score += 1
+      #update_attribute :hunger_score, hunger_score + 1
     end
 
     def maybe_complain_of_hunger

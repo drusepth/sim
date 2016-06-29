@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160629062850) do
+ActiveRecord::Schema.define(version: 20160629070902) do
 
   create_table "lifeforms", force: :cascade do |t|
     t.string   "name"
@@ -36,15 +36,18 @@ ActiveRecord::Schema.define(version: 20160629062850) do
     t.float    "amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "world_id"
   end
+
+  add_index "vegetations", ["world_id"], name: "index_vegetations_on_world_id"
 
   create_table "worlds", force: :cascade do |t|
     t.string   "name"
     t.string   "description"
     t.datetime "ended_at"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.float    "temperature"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.float    "temperature", default: 50.0
   end
 
 end

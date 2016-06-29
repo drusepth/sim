@@ -11,17 +11,30 @@ class World < ActiveRecord::Base
 			lifeform.tick
 		end
 
+		#yield
 		log_records_for_today
 	end
 
 	def add_lifeform
-		life = Lifeform.create! name: 'Bob', owner: 'dru'
+		life = lifeforms.create!(
+			name: 'Bob',
+			owner: 'dru',
+			created_at: DateTime.now,
+			age: 0
+		)
 
-		@messages << "Lifeform '#{life['name']} of #{life['owner']}land has entered the world. New population: #{lifeforms.count}"
+		messages << "'#{life['name']}' of #{life['owner'].capitalize}land has entered the world! New population: #{lifeforms.count}."
 	end
 
 	def messages
 		@messages ||= []
+	end
+
+	def fetch_and_clear_messages
+		res = messages.to_sentence
+		@messages.clear
+
+		res
 	end
 
 	private
@@ -33,16 +46,19 @@ class World < ActiveRecord::Base
 	end
 
 	def temperature_sway
+		new_temperature  = temperature + rand(10) - 10
+
 		if temperature < 40
-			update_attribute :temperature, temperature + rand(10) + Math.log(lifeforms.count)
+			new_temperature += rand(10) + Math.log(lifeforms.count)
 		end
 
 		if temperature > 60
-			update_attribute :temperature, temperature - rand(10) + Math.log(lifeforms.count)
+			new_temperature -= rand(10) + Math.log(lifeforms.count)
 		end
+
+		update_attribute :temperature, new_temperature
 	end
 
 	def log_records_for_today
-		yield # Respond with @messages over irc
 	end
 end
